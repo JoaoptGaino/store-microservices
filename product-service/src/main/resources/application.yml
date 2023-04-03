@@ -6,3 +6,6 @@ spring:
       database: product-service
   application:
     name: product-service
+server:
+  error:
+    include-message: always

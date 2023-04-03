@@ -2,9 +2,10 @@ package com.br.joaoptgaino.inventoryservice.controller;
 
 
 import com.br.joaoptgaino.inventoryservice.dto.InventoryResponse;
-import com.br.joaoptgaino.inventoryservice.service.InventoryService;
+import com.br.joaoptgaino.inventoryservice.service.InventoryServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,11 +15,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class InventoryController {
 
-    private final InventoryService inventoryService;
+    private final InventoryServiceImpl inventoryService;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<InventoryResponse> isInStock(@RequestParam List<String> skuCode) {
-        return inventoryService.isInStock(skuCode);
+    public ResponseEntity<List<InventoryResponse>> isInStock(@RequestParam List<String> skuCode) {
+        List<InventoryResponse> inventoryResponses = inventoryService.isInStock(skuCode);
+        return ResponseEntity.status(HttpStatus.OK).body(inventoryResponses);
     }
 }
