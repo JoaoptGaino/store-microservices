@@ -7,6 +7,7 @@ import com.br.joaoptgaino.orderservice.model.Order;
 import com.br.joaoptgaino.orderservice.model.OrderLineItems;
 import com.br.joaoptgaino.orderservice.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -22,7 +23,9 @@ import java.util.UUID;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
-    private final WebClient webClient;
+    private final WebClient.Builder webClientBuilder;
+
+    private final ModelMapper modelMapper;
 
     public Order placeOrder(OrderRequest orderRequest) {
         Order order = getOrder(orderRequest);
@@ -65,8 +68,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private InventoryResponse[] getInventory(List<String> skuCodes) {
-        return webClient.get()
-                .uri("http://localhost:8082/api/inventory",
+        return webClientBuilder.build().get()
+                .uri("http://inventory-service/api/inventory",
                         uriBuilder -> uriBuilder.queryParam("skuCode", skuCodes)
                                 .build())
                 .retrieve()
@@ -75,10 +78,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private OrderLineItems mapToDto(OrderLineItemsDTO orderLine) {
-        OrderLineItems orderLineItems = new OrderLineItems();
-        orderLineItems.setPrice(orderLine.getPrice());
-        orderLineItems.setQuantity(orderLine.getQuantity());
-        orderLineItems.setSkuCode(orderLine.getSkuCode());
-        return orderLineItems;
+        return modelMapper.map(orderLine, OrderLineItems.class);
     }
 }
