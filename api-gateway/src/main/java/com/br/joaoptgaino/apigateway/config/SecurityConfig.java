@@ -13,7 +13,7 @@ public class SecurityConfig {
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity serverHttpSecurity) {
         serverHttpSecurity.csrf()
                 .disable()
-                .authorizeExchange(exchange -> exchange.pathMatchers("/eureka/**")
+                .authorizeExchange(exchange -> exchange.pathMatchers("eureka/**")
                         .permitAll()
                         .anyExchange()
                         .authenticated())
