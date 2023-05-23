@@ -32,7 +32,7 @@ public class OrderServiceImpl implements OrderService {
 
         List<String> skuCodes = order.getOrderLineItemsList().stream().map(OrderLineItems::getSkuCode).toList();
 
-        InventoryResponse[] inventoryResponses = getInventory(skuCodes);
+            InventoryResponse[] inventoryResponses = getInventory(skuCodes);
 
         boolean allProductsInStock = Arrays.stream(Objects.requireNonNull(inventoryResponses)).allMatch(InventoryResponse::isInStock);
 
